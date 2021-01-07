@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <script type="text/javascript">
+	var metacoin_token_abi = [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "seller",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x08551a53"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "startDate",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x0b97bc86"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "dealTimeout",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x3c210e3c"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "buyer",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x7150d8ae"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "dealPrice",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x71eba703"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "dealStatus",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0xb85477c5"
+    },
+    {
+      "inputs": [
+        {
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "name": "timeout",
+          "type": "uint256"
+        },
+        {
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor",
+      "signature": "constructor"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "Pay",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function",
+      "signature": "0x537a924c"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "DealSuccess",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function",
+      "signature": "0xafc2104e"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "hash",
+          "type": "bytes32"
+        },
+        {
+          "name": "v",
+          "type": "uint8"
+        },
+        {
+          "name": "r",
+          "type": "bytes32"
+        },
+        {
+          "name": "s",
+          "type": "bytes32"
+        }
+      ],
+      "name": "DealFailed",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function",
+      "signature": "0xf1d9062b"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "DealTimeout",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function",
+      "signature": "0xca8c9edc"
+    }
+  ];
+	
+	window.addEventListener('load', function () {
+		var Web3 = require('web3');
+		if (typeof web3 !== 'undefined') {
+			console.log('Web3 Detected! ' + web3.currentProvider.constructor.name)
+			window.web3 = new Web3(web3.currentProvider);
+		} else {
+			console.log('No Web3 Detected... using HTTP Provider')
+			window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+		}
+	})
+
+	async function getBalance() {
+		var balance, balance2;
+
+		balance = (await web3.eth.getBalance(web3.eth.accounts[0]));
+		balance2 = (await web3.eth.getBalance(web3.eth.accounts[2]));
+
+		document.getElementById("output2").innerHTML = "地址1: " + web3.fromWei(balance.toNumber()) + "JCB。地址2: " + web3.fromWei(balance2.toNumber()) + " JCB";
+	}
+
+	async function pay_ether() {
+		var contractAddress, contractABI, tokenContract;
+		contractAddress = document.getElementById("contractAddress").value;
+
+		contractABI = metacoin_token_abi;
+		tokenContract = web3.eth.contract(contractABI).at(contractAddress);
+
+		await tokenContract.Pay.sendTransaction({from: web3.eth.accounts[0], value: web3.toWei(0.01, 'ether')});
+	}
+
+	async function greatpay_timeout() {
+		var contractAddress, contractABI, tokenContract, balance, balance2;
+		contractAddress = document.getElementById("contractAddress").value;
+
+		contractABI = metacoin_token_abi;
+		tokenContract = web3.eth.contract(contractABI).at(contractAddress);
+
+		await tokenContract.DealTimeout.sendTransaction({from: web3.eth.accounts[0]});
+	}  
+	</script>
+</head>
+<body>
+  <h1>交易超时</h1>
+	<p>合约地址:</p>
+  <input type="text" size="50" id="contractAddress" value="0x787A98746a5bB75A2783f7d8378aCB48B09eB169"/>    
+  <br /><br />
+	<button type="button" onClick="pay_ether();">付钱</button>
+	<button type="button" onClick="greatpay_timeout();">超时</button>
+  <br /><br />
+	<button type="button" onClick="getBalance();">获取帐户以太数量</button>
+  <br /><br />
+  <div id="output2"></div>
+</body>
+</html>

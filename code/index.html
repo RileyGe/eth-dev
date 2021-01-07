@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <script type="text/javascript">
+	var metacoin_token_abi = [
+		{
+		  "inputs": [],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "constructor"
+		},
+		{
+		  "anonymous": false,
+		  "inputs": [
+			{
+			  "indexed": true,
+			  "name": "_from",
+			  "type": "address"
+			},
+			{
+			  "indexed": true,
+			  "name": "_to",
+			  "type": "address"
+			},
+			{
+			  "indexed": false,
+			  "name": "_value",
+			  "type": "uint256"
+			}
+		  ],
+		  "name": "Transfer",
+		  "type": "event"
+		},
+		{
+		  "constant": false,
+		  "inputs": [
+			{
+			  "name": "receiver",
+			  "type": "address"
+			},
+			{
+			  "name": "amount",
+			  "type": "uint256"
+			}
+		  ],
+		  "name": "sendCoin",
+		  "outputs": [
+			{
+			  "name": "sufficient",
+			  "type": "bool"
+			}
+		  ],
+		  "payable": false,
+		  "stateMutability": "nonpayable",
+		  "type": "function"
+		},
+		{
+		  "constant": true,
+		  "inputs": [
+			{
+			  "name": "addr",
+			  "type": "address"
+			}
+		  ],
+		  "name": "getBalanceInEth",
+		  "outputs": [
+			{
+			  "name": "",
+			  "type": "uint256"
+			}
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+		},
+		{
+		  "constant": true,
+		  "inputs": [
+			{
+			  "name": "addr",
+			  "type": "address"
+			}
+		  ],
+		  "name": "getBalance",
+		  "outputs": [
+			{
+			  "name": "",
+			  "type": "uint256"
+			}
+		  ],
+		  "payable": false,
+		  "stateMutability": "view",
+		  "type": "function"
+		}
+	];
+	
+	window.addEventListener('load', function () {
+		if (typeof web3 !== 'undefined') {
+			console.log('Web3 Detected! ' + web3.currentProvider.constructor.name)
+			window.web3 = new Web3(web3.currentProvider);
+		} else {
+			console.log('No Web3 Detected... using HTTP Provider')
+			window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+		}
+	})
+
+	async function getBalance() {
+		var contractAddress, contractABI, tokenContract, balance, balance2
+		contractAddress = document.getElementById("contractAddress").value
+
+		contractABI = metacoin_token_abi
+		tokenContract = web3.eth.contract(contractABI).at(contractAddress)
+
+		balance = await tokenContract.getBalance.call(web3.eth.accounts[0])
+		balance2 = await tokenContract.getBalance.call(web3.eth.accounts[1])
+
+		document.getElementById("output2").innerHTML = "地址1: " + balance + "JCB。地址2: " + balance2 + " JCB"
+	}
+
+	async function transfer() {
+		var contractAddress, contractABI, tokenContract, balance, balance2, amount
+		amount = document.getElementById("amount").value
+		contractAddress = document.getElementById("contractAddress").value
+
+		contractABI = metacoin_token_abi
+		tokenContract = web3.eth.contract(contractABI).at(contractAddress)
+
+		await tokenContract.sendCoin.sendTransaction(web3.eth.accounts[1], amount, {from: web3.eth.accounts[0]})
+	}  
+	</script>
+</head>
+<body>
+    <h1>自定义代币交互</h1>
+	<p>合约地址:</p>
+    <input type="text" size="50" id="contractAddress" value="0x787A98746a5bB75A2783f7d8378aCB48B09eB169"/>    
+    <br />
+	<p>地址1向地址2转账数量:</p>
+    <input type="text" size="50" id="amount" value="100"/>
+	<button type="button" onClick="transfer();">转帐</button>
+    <br />
+	<br />
+	<button type="button" onClick="getBalance();">获取MetaCoin数量</button>
+    <br />
+    <br />
+    <div id="output2"></div>
+</body>
+</html>
