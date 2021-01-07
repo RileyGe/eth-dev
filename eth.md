@@ -308,7 +308,7 @@ Commands:
 
 如前文所述，我们使用Ganache来创建私链。在 Windows 中，我们可以直接打开 Ganache 程序，以显示GUI。在 Ubuntu 或 MacOS中，可以使用```ganache-cli```命令来启用命令行工具。
 
-![Ganache GUI](static\ganache-gui.png)
+![Ganache GUI](static/ganache-gui.png)
 
 默认情况下，Ganache会自动创建10个用户，每个用户会有100个以太坊以方便进行程序的部署和调试。默认的 PRC SERVER 为 http://127.0.0.1:7545。
 
@@ -389,11 +389,11 @@ Compiling your contracts...
 
 执行完```truffle test```之后你会发现第一个用户的余额发生了变化，私链的区块数也发生了变化。如下图所示：
 
-![ganache-gui-after-test](static\ganache-gui-after-test.png)
+![ganache-gui-after-test](static/ganache-gui-after-test.png)
 
 然后转到 **TRANSACTIONS** 标签中会发现已经有好几个事件：
 
-![ganache-gui-transactions](static\ganache-gui-transactions.png)
+![ganache-gui-transactions](static/ganache-gui-transactions.png)
 
 说明我们的虚拟货币 JCB 已经布置到Ganache链上。
 
@@ -557,7 +557,7 @@ web3.js 是最常用的与以太坊进行交互的方式之一，它可以通过
 
 上面的页面中实际起作用的只有不到20行，实现了两个基本的功能：查询余额、转账。显示效果如下：
 
-![web3-ganache-interaction](static\web3-ganache-interaction.png)
+![web3-ganache-interaction](static/web3-ganache-interaction.png)
 
 具体如何使用web3.js会在下一节代码分析中作更详细的说明。
 
@@ -1074,7 +1074,7 @@ Truffle 使用了 [Mocha](https://mochajs.org/) 测试框架。如果大家用�
 
 下面一张图片表示了**用例集描述**、**用例描述**在命令行中的显示作用：
 
-![truffle-test](static\truffle-test.png)
+![truffle-test](static/truffle-test.png)
 
 然后后面的代码就非常简单了，通过`const metaCoinInstance = await MetaCoin.deployed();`来获取到合约的实例，后面函数的调用了web3.js中基本没有区别。在代码的编写过程中，可能通过`console.log(...)`函数来向命令行窗口输出，可以通过`assert(...)`进行断言。
 
@@ -1135,7 +1135,7 @@ truffle migrate
 
 有时你可能需要`truffle migrate --reset`来重置部署。
 
-![ganache-after-migration](static\ganache-after-migration.png)
+![ganache-after-migration](static/ganache-after-migration.png)
 
 执行了这二个命令之后 MetaCoin 这个合约已经布置到区块链上了，但事实上这个合约中的几个函数并没有被调用（虽然此时在事件中有两个调用事件，如上图所示，但这两个其实都是调用 Migration 合约的事件）。我们可以把Truffle的调试方式称为**事后调试**。也就是说 Truffle 是在事情发生之后，通过重现事情的场景进行调试。上面的二行命令并没有对合约中的函数进行调用，也就没有办法来进行调试。这时我们前面写的测试用例的作用就出来了。然后我们再执行命令：
 
@@ -1147,15 +1147,15 @@ truffle test
 
 根据下面的图片，大家会发现，有的测试用例后面有时间，有的没有：
 
-![truffle-test-result](static\truffle-test-result.png)
+![truffle-test-result](static/truffle-test-result.png)
 
 我们来看看Ganache中事件发生了什么变化：
 
-![truffle-after-test](static\truffle-after-test.png)
+![truffle-after-test](static/truffle-after-test.png)
 
 对的，只增加了一个 CONTRACT CALL 的事件（事实上，test 命令会将所有合约重新布置一遍，这是Truffle的锅，原因见下图）。
 
-![clean-room-environment](static\clean-room-environment.png)
+![clean-room-environment](static/clean-room-environment.png)
 
 这说明我们对`view`或者`pure`类型的函数的调用并不会被区块链保存下来，并不消耗 gas。这也直接导致我们无法用 `truffle debug address`命令来对这些函数进行调试。
 
@@ -1169,7 +1169,7 @@ truffle debug 0xb0866fe63baf42b6f2d029bce3a7d9a28fce4ef78324183e17246ba306a6a68f
 
 就可以开始调试了：
 
-![truffle-debug](static\truffle-debug.png)
+![truffle-debug](static/truffle-debug.png)
 
 上图中红框中的部分是调试中的**操作手册**，大家仔细读一下就明白了，这里我就不细说了。
 
@@ -1794,11 +1794,11 @@ npm install truffle-hdwallet-provider
 
 然后创建一个新的 PROJECT：
 
-![infura-create-project](static\infura-create-project.png)
+![infura-create-project](static/infura-create-project.png)
 
 对我们来说，最重要的PROJECT ID，把这个复制下来：
 
-![infura-project-id](static\infura-project-id.png)
+![infura-project-id](static/infura-project-id.png)
 
 #### 6.2.3 配置Truffle项目
 
